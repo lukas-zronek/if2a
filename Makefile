@@ -60,7 +60,7 @@ endif # crosswin32
 # OSX environment
 
 # autodetection
-ifeq ($(hostmachine),Power Macintosh)
+ifeq ($(hostkernel),Darwin)
 OSX		= 1
 endif # OSX autodetect
 
