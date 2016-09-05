@@ -89,7 +89,7 @@ static int f2a_boot (binware_s* multiboot, binware_s* splash, int usb_timeout_in
      * but autodetection will fail because the image is not entirely copied to
      * VRAM.
 	 */
-	sleep(0.5);
+	sleep(1);
 
 	return 0;
 }
