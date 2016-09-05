@@ -24,7 +24,9 @@ endif
 ifeq ($(shell which pkg-config; echo $$?),0)
 HAVE_PKG_CONFIG=1
 else
+ifneq ($(quiet),1)
 $(warning pkg-config not found)
+endif
 LIBUSB_LDFLAGS=-lusb
 endif
 
