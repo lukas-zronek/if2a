@@ -29,7 +29,6 @@ endif
 # environment settings
 
 hostkernel=$(shell uname -s)
-
 #-----------------------
 # native win32 environment autodetection
 ifneq ($(COMSPEC),)
@@ -191,7 +190,7 @@ rawc-multi.o: rawc-multi.c
 B		= binware
 BINWARE		= $(B).c $(B).h
 
-$(BINWARE): rawc-multi$(HOSTEXT) $(shell echo binware/*.{hex,gba,mb,img})
+$(BINWARE): rawc-multi$(HOSTEXT) $(shell echo binware/*.hex binware/*.gba binware/*.mb binware/*.img)
 	@echo "Building $(B)..."
 	@rm -f $(BINWARE)
 ifeq ($(POGO),1)
@@ -281,8 +280,8 @@ sources: distclean subsources
 dep: .depends
 
 clean:
-	rm -f {.,*/*}/*.o
+	rm -f *.o */*/*.o
 
 distclean: clean
-	rm -f .depends $(BINWARE) libf2a.a {rawc-multi,if2a,iefa}{,.exe} doc/FAQWTO.{html,txt}
-	@rm -f {.,*/*}/*~ DEADJOE
+	rm -f .depends $(BINWARE) libf2a.a rawc-multi if2a iefa rawc-multi.exe if2a.exe iefa.exe doc/FAQWTO.html doc/FAQWTO.txt
+	@rm -f *~ */*/*~ DEADJOE
