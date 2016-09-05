@@ -21,7 +21,6 @@ endif
 ######################################
 # environment settings
 
-hostmachine=$(shell uname -m)
 hostkernel=$(shell uname -s)
 
 #-----------------------
