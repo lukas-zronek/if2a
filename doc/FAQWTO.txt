@@ -1,0 +1,654 @@
+
+if2a-0.94.4
+
+FAQ & HOWTO
+
+if2a team
+
+   last update 2005/11/06
+     _________________________________________________________
+
+   Table of Contents
+   1. HOWTO
+
+        1.1. Introduction
+        1.2. History
+        1.3. Hardware status
+
+              1.3.1. Linkers status
+              1.3.2. Cartridges status
+
+        1.4. OS status
+
+              1.4.1. Linux
+              1.4.2. Windows
+              1.4.3. MacOSX
+              1.4.4. FreeBSD
+
+        1.5. License
+        1.6. Compilation and Installation
+
+              1.6.1. Compilation
+              1.6.2. Binaries
+              1.6.3. Installation
+              1.6.4. Flash2Advance USB Linker driver
+
+        1.7. Credits
+
+   2. FAQ
+
+        2.1. My cart is not or badly detected !
+        2.2. Write and delete roms
+
+              2.2.1. Without cart map (and without loader)
+              2.2.2. With cart map (also called "if2a's easyrom"
+                      feature)
+
+              2.2.3. Header correction
+              2.2.4. Pogoshell
+
+        2.3. Saves and SRAM management
+
+              2.3.1. How to backup all cart sram ?
+              2.3.2. How to backup a rom save when using
+                      Flash2Advance Pro loader (gba-loader 3.2 or
+                      3.3) ?
+
+              2.3.3. How to backup a rom save when using
+                      PogoShell ?
+
+              2.3.4. How to backup a rom save when using
+                      PowerWriter's loader ?
+
+        2.4. *NIX
+
+              2.4.1. Using sudo
+              2.4.2. I get the annoying message 'Device or
+                      resource busy' !
+
+   3. Links
+
+   All you need to know about your Flash2Advance cart and if2a.
+   Almost.
+     _________________________________________________________
+
+1. HOWTO
+
+1.1. Introduction
+
+   This is if2a, a command-line utility that allows one to
+   control the Flash2Advance flash carts for the GameBoy Advance.
+   It is based on the original f2a utility, and exists only
+   because there is no official *nix drivers and tools. There is
+   an official website too. The latest version of this document
+   can be found in the documentation section of the website.
+
+   if2a generally comes with all the files and binaries needed to
+   use your flashcart (exception for the win32 drivers). The
+   binary files included in if2a can be choosen by copying and
+   editing the Makefiles (see Makefile.defaultconf from sources)
+   if you wish to recompile. We made things so that the good
+   files are already inserted and automatically used according to
+   your hardware. You can use your own files without recompiling
+   if you need to, using the if2a options. Thus, if2a comes
+   alone, generally statically linked, so there is no need to use
+   any external files to make things work (except for win32).
+     _________________________________________________________
+
+1.2. History
+
+   if2a is based on Ulrich Hecht's original f2a who first found
+   the basis of the USB communication protocol with the
+   Flash2Advance USB Linker.
+     _________________________________________________________
+
+1.3. Hardware status
+
+1.3.1. Linkers status
+
+1.3.1.1. Flash2Advance USB cable
+
+   Supported.
+     _________________________________________________________
+
+1.3.1.2. Flash2Advance Parallel cable
+
+   Not supported yet. Need to import from original f2a software
+   which was updated in the meantime.
+     _________________________________________________________
+
+1.3.1.3. Flash2Advance USB Writer
+
+   Not supported yet. Need USB protocol hacking.
+     _________________________________________________________
+
+1.3.2. Cartridges status
+
+1.3.2.1. Flash2Advance Turbo
+
+   Seen and working as a Pro cart.
+     _________________________________________________________
+
+1.3.2.2. Flash2Advance Pro
+
+   Full autodetection and support. Tested on 256Mbits cart models
+   (Pro and Pro-B).
+     _________________________________________________________
+
+1.3.2.3. Flash2Advance Ultra
+
+   Full Autodetection, but limited support. At least detected and
+   usable as a Pro cart (tested on 256Mbits models). Ability to
+   download compressed SVD...(?to complete?)
+     _________________________________________________________
+
+1.4. OS status
+
+1.4.1. Linux
+
+   Linux-x86 2.4 and 2.6. Maybe Linux-ppc, to be tested.
+
+   For linux-x86 < 2.4.19, EZUSB2131 is needed.
+     _________________________________________________________
+
+1.4.2. Windows
+
+   Depends on libusb-win32. Working with windows 98se, 2k and XP.
+   Not tested with Windows 95/98(not se)/me) yet (as of
+   libusb-win32-0.1.8.0, libusb-win32-0.1.10 is not working).
+     _________________________________________________________
+
+1.4.3. MacOSX
+
+   Support for Pro carts in version if2a-0.94.1.
+     _________________________________________________________
+
+1.4.4. FreeBSD
+
+   Reported to work.
+     _________________________________________________________
+
+1.5. License
+
+   GNU Public License 2.0
+     _________________________________________________________
+
+1.6. Compilation and Installation
+
+1.6.1. Compilation
+
+   if2a needs libusb or libusb-win32, gcc and GNU Make. If libusb
+   is installed on your system, nothing more might be needed. If
+   libusb is built by your own and is not installed in usual
+   places, three variables can help to tell Makefile where to
+   find the good files. They are LIBUSBPATH, LIBUSBINCL and
+   LIBUSBLIB.
+
+     * LIBUSBPATH is the directory which contains libusb[-win32]
+       sources in which case the other variables are useless. The
+       value could be ./libusb-0.1.10a or /opt/libusb (or even
+       /usr but this one is luckily automatically used if valid).
+       You can also specify the two directories in which usb.h
+       and libusb.a can be found:
+     * LIBUSBINCL is the directory which contains usb.h.
+     * LIBUSLIB is the directory which contains libusb.a.
+
+   There are several ways to set these variables, here are some
+   examples:
+
+     * export LIBUSBPATH=/usr/local in Bourne shell environments
+     * setenv LIBUSBPATH /usr/local in C-Shell environments
+     * make if2a LIBUSBINCL=/usr/local/include/libusb/
+       LIBUSBLIB=/usr/local/lib/libusb/ directly in the make
+       command.
+
+   You might also need to read/edit the Makefile. Unfortunately
+   there is no autoconf/automake scripts for if2a. Note that
+   Win32 needs cygwin (msys+mingw not tested yet). Ability to
+   cross compile win32 binaries (edit Makefile to setup your
+   compiler, libusb-win32 is needed).
+     _________________________________________________________
+
+1.6.2. Binaries
+
+   You can find various binaries in the download section on the
+   if2a website. Roni has also made a site dedicated to if2a on
+   OSX.
+     _________________________________________________________
+
+1.6.3. Installation
+
+   There is no installation process. if2a is a unique executable
+   file that you may copy wherever you like. The command line
+   description is documented here (ahem) or when if2a is launched
+   without any arguments.
+     _________________________________________________________
+
+1.6.4. Flash2Advance USB Linker driver
+
+1.6.4.1. General
+
+   The Flash2Advance USB linker is a USB cable fitting in your
+   computer on one side and in yourt GBA in the other side. It
+   contains a an2131 microcontroler (8051 based) (more
+   informations on http://www.linux-usb.org/ezusb. The driver
+   consists in two parts. The first part uploads a program into
+   the cable's an2131 chip. The USB cable then renumerates (ie:
+   changes its USB IDs according to the new program in it). Then
+   a second driver is needed to talk to this new device.
+
+   Under windows with the official Flash2Advance installer, these
+   two drivers are automatically used once the cable is plugged.
+   In if2a and under any OS, the easiest way was to let if2a
+   itself do the job. If if2a detects unconfigured things (cable
+   has just been plugged in), it will upload the new program into
+   the cable chip, then a short while later (renumeration) it
+   detects the configured cable and can use the regular USB
+   driver. Portability has been possible thanks to the great
+   libusb.
+
+   if2a is then able to upload the GBA-side driver into the GBA,
+   and play with your flash cart's bits.
+
+   It is a bit more complex under windows, since it is harder to
+   access to an USB device without having a "proper win32
+   driver". The libusb-win32 project helps our open world in the
+   way that they added to libusb a fake "proper win32 driver"
+   that allows a userland program to directly talk to a USB
+   device. It is not that simple to install though, Cory explains
+   us how to install these fake drivers in the next section.
+     _________________________________________________________
+
+1.6.4.2. Windows USB driver installation notes
+
+1.6.4.2.1. Introduction
+
+   Due to changes in the LibUSB, this driver will not work with
+   later versions than libusb-win32 v0.1.8.0. We/I are/am working
+   on getting the later versions compliant for all the best in
+   the bugfixes that they have to offer. Thanks to the LibUSB
+   project for providing such a great (free) win32 lib for USB
+   devices. questions? comments? praise? I can be contacted by
+   mail, or others of the if2a project may even be willing to
+   help/take some praise :) libusb can be found on sourceforge
+   (see credits). Win32 (98se, 2k, XP) installation package can
+   be downloaded there.
+     _________________________________________________________
+
+1.6.4.2.2. Warnings
+
+   This has only been tested on Windows XP Pro SP2 by myself
+   (cory) and Windows 98se (spooo) at this point, there are
+   possible issues when trying to use under non-winNT based
+   Windows systems (Windows 95, Windows 98 (not se), Windows ME).
+   It's use at your own risk/discretion for these systems. Report
+   any successes with this on older windows to me by mail. Now to
+   the grit, the install (you should not have to restart the PC
+   during this install, as libusb filter does a usb restart):
+     _________________________________________________________
+
+1.6.4.2.3. Driver Installation
+
+     * 1) IMPORTANT: you MUST use a different usb plug-in than
+       the one you use with PowerWriter or REMOVE PowerWriter's
+       drivers COMPLETELY from the system. To do so:
+       If you use(d) PowerWriter of f2aw31 and have no open usb
+       plug-ins you need to remove the drivers for it:
+          + Windows 2k, XP
+               o a- START / control panel / system /
+                 hardware(tab) / device manager (button) The
+                 device manager should now pop up.
+               o b- Under view select "Show Hidden Devices". (if
+                 its not available you will need to plug in the
+                 usb linker to see its drivers)
+               o c- In the device list you should see an entry
+                 for "Universal Serial Bus controllers" expand
+                 this entry to see the devices that are installed
+                 to it.
+               o d- There will be 2 drivers for Flash 2 Advanced
+                 power writer right click on each one and select
+                 uninstall.
+            Once they are both removed or confirmed to no longer
+            exist in the device manager proceed to 2)
+          + Windows 98se. The installation process looks like the
+            2k/XP one but I (spooo) did not succeed in removing
+            the former drivers before installing those from
+            libusb. So you need to install libusb before, see
+            step 2). Then you have to "upgrade" the existing
+            drivers:
+               o a- START / control panel / system / hardware
+                 manager tab The device manager should now pop
+                 up. Plug your cable now.
+               o b- The f2a device driver should appear (check
+                 also in the usb host controler). If it does not
+                 appear and windows asks for a driver disk (it
+                 should happen if you have no f2a drivers already
+                 installed), jump to 3)a.
+               o c-Select it, then "Properties" then "Driver"
+                 tab, and "Driver upgrade". Then jump to 3)b.
+     * 2) run the "libusb-win32-filter-bin-0.1.8.0.exe" and
+       follow the instructions. - you do not need to install the
+       SDK or source files for this application.
+     * 3) plug in the usb linker, and wait for a bit while
+       windows detects it. If you have auto install drivers
+       turned on, it will install whatever it thinks is right,
+       and you will have to go into the device manager and select
+       the driver it installed, right click on it and select
+       update and follow the procedure below with the first "On
+       the next screen".
+          + a- ONCE windows autodetects the USB device, it will
+            ask you if you want to autoinstall drivers Select No,
+            not at this time and press next.
+          + b- On the next screen select Install from a list or
+            specified location and press next.
+          + c- On the next screen select Dont Search. I will
+            choose the driver to install. Press next.
+          + d- Click on Have Disk.
+          + e- Click on browse.
+          + f- Find where you extracted this archive to and enter
+            the if2ausbXP directory, it will select libusb.inf,
+            press open. (for me the path is C:\Documents and
+            Settings\Cory\Desktop\libusbwinxpf2a\if2ausbXP)
+          + g- Press OK
+          + h- "if2a USB linker, Version 02/15/2004, 0.1.8.0"
+            should be the only entry in the list press next.
+          + i- When it asks about driver signing, press continue
+            anyway.
+          + j- It will copy some files over and will tell you its
+            complete, press finish.
+          + k- Now you need to run if2a.exe with a command to get
+            it to attempt to link, dont worry, the error is
+            expected, there are 2 drivers to install - the linker
+            and the writer drivers. (a good command to use is
+            "if2a.exe -u file.svd" - without the quotes of
+            course)
+          + l- After seeing the error,
+               o 2k/XP: windows will now realize that there is
+                 yet another device to install. The error is
+                 this: usb_control_msg: error sending control
+                 message: win error: The device is not connected.
+                 an2131: could not start chip Unable to connect
+                 to F2A linker.
+               o 98se: if an old driver is already installed or
+                 windows does not complain (but if2a may be
+                 unhappy), you need to go back to step 1)b and
+                 process to the installation of the second
+                 driver. Otherwise, continue with m- below.
+          + m- Now that windows has seen the new device, follow
+            the above steps a- through f- again.
+          + n- "if2a USB writer, Version 02/15/2004, 0.1.8.0"
+            should be the only entry in the list press next.
+          + o- When it asks about driver signing, press continue
+            anyway.
+          + p- It will copy some files over and will tell you its
+            complete, press finish.
+       Thats it. Now if2a will link to you GBA and be able to
+       read/write the f2a cart.
+     _________________________________________________________
+
+1.7. Credits
+
+   Ulrich Hecht - original f2a creator.
+
+   Eli Curtz - Initial OSX port and f2a linker multiboot
+   protocol.
+
+   Julien Janier - Linux-x86 2.6 USB initial port.
+
+   Vince - if2a development, f2au hacking, f2a firmware and
+   loaders extraction and related scripts, if2a website creator &
+   maintainer.
+
+   Cory - win32 tests, if2a's libusb-win32 driver installer and
+   installation howto, f2a loader extraction.
+
+   Chris - if2a MacOSX port.
+
+   spooo - if2a development.
+
+   r0ni - OSX builds.
+
+   Stephan Meyer (from the libusb-win32 team) for his ultra
+   portable an2131 usb loader.
+
+   libusb and libusb-win32 projects teams.
+
+   devkitpro project team for their gbafix program.
+
+   Special thanks to Nintendo and the Flash2Advance team.
+     _________________________________________________________
+
+2. FAQ
+
+   In all the following examples, the option -d will be used. It
+   tells to if2a not to write anything. If you want to write,
+   don't use this option.
+     _________________________________________________________
+
+2.1. My cart is not or badly detected !
+
+   It seems that recent ultra carts need a recent multiboot
+   program (the one loaded onto the GBA for I/O operations on
+   carts). If nothing works (for instance Unknown cart displayed
+   on GBA), an alternate multiboot program maybe tried. Inside
+   the binaries version of if2a, two of them are available:
+$ ./if2a -B list
+if2a - http://if2a.free.fr
+Available internal files for F2A-usb-linker-multiboot:
+        0 = binware/multiboot-f2a-usb-v2.4b.mb (22528 bytes)
+        1 = binware/multiboot-f2a-usb-v2.6bU.mb (23552 bytes)
+        or  name = any external file name
+
+   The first one (0=) is the latest version which works properly
+   with pro carts. These are not correctly detected with the
+   latest multiboot program (1=) (got from PowerWriter 2.61).
+   Recent ultra carts (any size, from 256Mbits to 2Gbits) need
+   this last version:
+if2a -B 1 other options...
+
+   Old pro cart users may try the latest multiboot program with
+   if2a since if2a tries and corrects the cart detection. Use
+   this feature at your own risk (but it works at least for my
+   two 256Mbits pro carts :-).
+
+   If you need to change the default behaviour of if2a (to use -B
+   1 by default), you need to get the sources, copy
+   Makefile.defaultconf to Makefile.conf, edit it and recompile.
+     _________________________________________________________
+
+2.2. Write and delete roms
+
+   You might need a loader. Several loaders are internally
+   available in if2a. You can see them with the following
+   command. You need either to plug your GBA in so to
+   automatically detect the flashcart type or to specify your
+   flashcart type with the -t option.
+if2a -L list
+
+   From if2a-0.94, a minimal version of PogoShell is included in
+   the loaders, with almost nothing in the filesystem, so to have
+   a small and very powerfull loader which perfectly works with
+   f2apro carts. This loader can also be used with f2a ultra
+   carts (option -L 1). If you want to use your own Pogoshell
+   build, just specify it with the -L option (see the Pogoshell
+   paragraph).
+     _________________________________________________________
+
+2.2.1. Without cart map (and without loader)
+
+   Let's suppose you have rom1.gba, rom2.gba and rom3.gba. The
+   following command will put them into your cart (the loader
+   will be automatically included).
+if2a -d -W rom1.gba rom2.gba rom3.gba
+
+   If you need to add rom4.gba later, you need the three other
+   files:
+if2a -d -W rom1.gba rom2.gba rom3.gba rom4.gba
+
+   if2a will not rewrite rom1.gba through rom3.gba. Update: the
+   if2a-0.94.2 built the cartmap with this -W option. This is no
+   longer the case since if2a-0.94.3. Read about the cartmap in
+   the next paragraph.
+
+   For the loader not to be automatically inserted in the
+   beginning of the cart, (ex: a single flashme.gba or a nds roms
+   to be burned), use the option -n:
+if2a -d -W -n rom1.gba rom2.gba rom3.gba rom4.gba
+     _________________________________________________________
+
+2.2.2. With cart map (also called "if2a's easyrom" feature)
+
+   A flexible way to manage roms has appeared in if2a-0.94. Roms
+   can be added with option -A and removed with option -X. For
+   each operation, a rom map is maintained in the cart just after
+   the loader. To be able to use them if no cartmap is present on
+   your cart, you need to tell if2a to build one. The option -Y
+   will do this:
+if2a -d -Y -A mynewrom.gba -A "my other new rom.gba" -X myoldbuggyhomeb
+rewprogram -A "my new corrected program.gba,showed name in loader"
+
+   The -Y option will forget any older cartmap from the cart. It
+   will rebuild a new one according to the command line. Then you
+   can add / remove roms:
+if2a -d -A anotherrom.gba -X "showed name in loader"
+
+   As you can see, this is flexible. if2a will tell you whether
+   what you want to do is possible. If names contain spaces, you
+   need to double quote. You can change the rom name specifying
+   it after the comma like in the example.
+
+   Note: one cannot build a map from scratch according to what's
+   already existing in cart. If you already have roms in cart,
+   they cannot be taken into account in the "easyrom" cartmap
+   unless they are reburned using the -Y / -A options.
+     _________________________________________________________
+
+2.2.3. Header correction
+
+   By default, headers are gba-ly automatically corrected. If
+   this is unwanted, use the option -H:
+if2a -d -H -W -n rom1.nds.gba rom2...
+     _________________________________________________________
+
+2.2.4. Pogoshell
+
+   Pogoshell is usable in conjunction with the easyrom feature.
+   By default (for Pro carts), a minimal version of pogoshell is
+   used as the default loader. This can be changed by the -L
+   option. The first time you can do (with optional -A / -X
+   options, see above):
+if2a -d -Y -L flashme.gba
+
+   Then you can add or remove roms using if2a and without the
+   need to rebuild a new pogoshell everytime (see above). Your
+   pogoshell will see them in the cartrom/ directory. Note: you
+   cannot remove a rom which is inside pogoshell using if2a.
+
+   In case you prefer not using the if2a easyrom feature, you
+   still can do:
+if2a -d -W -n flashme.gba
+     _________________________________________________________
+
+2.3. Saves and SRAM management
+
+2.3.1. How to backup all cart sram ?
+
+   The command is:
+if2a -d -b all -r all-sram.bin
+
+   According to your cart type, it will create 256KB (f2apro) or
+   128KB (f2au) file. The option -r tells if2a that the SRAM is
+   to be read.
+     _________________________________________________________
+
+2.3.2. How to backup a rom save when using Flash2Advance Pro loader
+(gba-loader 3.2 or 3.3) ?
+
+   First check which sram bank is used by your rom. By default,
+   the first four banks use 64KB each which are designed as bank
+   1, 2, 3 or 4 and they refer respectively to the rom number 1,
+   2, 3 or 4. If you play with Select, B, R or L in the loader,
+   you can change the sram bank used for the rom. The bank used
+   takes names like '1a' or '2b3'. You must use these names with
+   the -b option in if2a:
+if2a -d -b 2b3 -r myromsave.bin
+
+   You can restore it back to GBA with:
+if2a -d -b 2b3 -w myromsave.bin
+     _________________________________________________________
+
+2.3.3. How to backup a rom save when using PogoShell ?
+
+   There is no automatic way to backup a particular save rom when
+   using PogoShell yet. What can be done is to save everything,
+   or if you need to backup a particular rom's sram, you can
+   start this rom with PogoShell (using its save) then power-off
+   the GBA. PogoShell will have make an expanded copy of the rom
+   save in the first 64Ko bank of the sram cart. You can then
+   back it up with the command:
+if2a -d -b 1 -r mysamerom.bin
+
+   To restore it back to the cart, you should start again the rom
+   from PogoShell, then power-off the GBA, then write the sram
+   data with:
+if2a -d -b 1 -w mysaverom.bin
+
+   Then power-on PogoShell back, it will ask if the save rom has
+   to be saved, answer yes.
+
+   IMPORTANT NOTE: before doing this, you should make a whole
+   backup of your sram.
+     _________________________________________________________
+
+2.3.4. How to backup a rom save when using PowerWriter's loader ?
+
+   dunno (same as PogoShell?).
+     _________________________________________________________
+
+2.4. *NIX
+
+2.4.1. Using sudo
+
+   if2a needs to be run as "root" so that it can access the usb
+   devices. You might be interested in staying who you really are
+   when using if2a. In order to do that, you can use the sudo
+   program that temporarily gives the root power to a normal user
+   for a specific command. You need to have this program (often
+   included in a packaged called sudo) installed on your machine
+   and if2a copied in /usr/local/bin (where it should usually
+   be). Then you need to edit the file /etc/sudoers, and to add
+   the following line:
+myself  ALL=NOPASSWD:/usr/local/bin/if2a
+
+   (where "myself" is your account login). Then you will be able
+   to do, beeing yourself:
+sudo if2a [command and options]
+     _________________________________________________________
+
+2.4.2. I get the annoying message 'Device or resource busy' !
+
+   This happens under Linux with some distributions that include
+   the usbtest module in the kernel configuration. This module is
+   automatically loaded by hotplug when the linker renumerates,
+   and prevents if2a from using the cable.
+
+   The error message looks like this:
+usb_set_configuration: could not set config 1: Device or resource busy
+
+   To check if it is really usbtest that messes things up, try
+   the command dmesg|tail, here it says:
+usb 1-2.4: usbfs: interface 0 claimed by usbtest while 'if2a' sets conf
+ig #1
+
+   This module can be unloaded (as root) with the command rmmod
+   usbest then if2a can be restarted. For future use, you can add
+   the word usbtest at the end of the file
+   /etc/hotplug/blacklist, this will prevent hotplug from loading
+   this module.
+     _________________________________________________________
+
+3. Links
+
+     * if2a website (and download section)
+     * if2a contacts for any further question.
+     * developper resources for if2a developpers.
