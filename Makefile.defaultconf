@@ -29,7 +29,7 @@ EFALINKER	= 1
 #LINKDEBUG	= ccmalloc
 
 # static linking is good for distributed binaries
-STATIC	 	= 1
+STATIC	 	= 0
 
 # some flags
 CFLAGS		+= -O0 -g -Wall
