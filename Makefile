@@ -21,8 +21,11 @@ endif
 ######################################
 # pkg-config
 
-ifeq ($(shell which pkg-config; echo $$?),1)
-$(error pkg-config not found)
+ifeq ($(shell which pkg-config; echo $$?),0)
+HAVE_PKG_CONFIG=1
+else
+$(warning pkg-config not found)
+LIBUSB_LDFLAGS=-lusb
 endif
 
 ######################################
@@ -75,8 +78,14 @@ endif # OSX env
 # more general/default settings
 
 # libusb
-CFLAGS		+= $(shell pkg-config --cflags libusb)
-LDFLAGS		+= $(shell pkg-config --libs libusb)
+
+ifeq ($(HAVE_PKG_CONFIG),1)
+LIBUSB_CFLAGS		= $(shell pkg-config --cflags libusb)
+LIBUSB_LDFLAGS		= $(shell pkg-config --libs libusb)
+endif
+
+CFLAGS		+= $(LIBUSB_CFLAGS)
+LDFLAGS		+= $(LIBUSB_LDFLAGS)
 
 # local compiler
 
