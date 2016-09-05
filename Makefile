@@ -19,6 +19,13 @@ include Makefile.defaultconf
 endif
 
 ######################################
+# pkg-config
+
+ifeq ($(shell which pkg-config; echo $$?),1)
+$(error pkg-config not found)
+endif
+
+######################################
 # environment settings
 
 hostkernel=$(shell uname -s)
@@ -32,9 +39,6 @@ LDFLAGS		+= -mno-cygwin
 WIN32		= 1
 EXT		= .exe
 HOSTEXT		= .exe
-
-# libusb path where include/ and lib/gcc/ can be found
-LIBUSBPATH	?= $(LIBUSBPATH_WIN32)
 
 endif # native win32
 
@@ -50,9 +54,6 @@ WIN32		= 1
 EXT		= .exe
 HOSTEXT		=
 
-# libusb path where include/ and lib/gcc/ can be found
-LIBUSBPATH	?= $(LIBUSBPATH_WIN32)
-
 endif # crosswin32
 
 #-----------------------
@@ -66,74 +67,17 @@ endif # OSX autodetect
 # environment
 ifneq ($(OSX),)
 
-LIBUSBPATH	?= $(LIBUSBPATH_OSX)
-
 CFLAGS		+= -DOSX=1
-LIBUSB		+= -framework IOKit
 STATIC		= 0
 
-# this will statically link libusb. Comment this if it does not work
-# compiles on darwin 7.9.0
-LINKUSB		= $(LIBUSBLIB)/libusb.a /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation
-
 endif # OSX env
-
-#-----------------------
-# default unix environment
-
-ifeq ($(LIBUSBPATH),)
-ifneq ($(LIBUSBPATH_UNIX),)
-LIBUSBPATH	?= $(LIBUSBPATH_UNIX)
-endif
-endif
-
-#-----------------------
-# check LIBUSBPATH validity
-ifneq ($(LIBUSBPATH),)
-
-ifneq ($(quiet),1)
-$(warning Checking libusb in LIBUSBPATH=$(LIBUSBPATH))
-endif
-
-ifeq ($(LIBUSBINCL),)
-LIBUSBINCL=$(shell for i in . include; do if [ -f $(LIBUSBPATH)/$$i/usb.h ]; then echo $(LIBUSBPATH)/$$i; break; fi; done)
-ifneq ($(LIBUSBINCL),)
-ifneq ($(quiet),1)
-$(warning .	found libusb include files in '$(LIBUSBINCL)/usb.h')
-endif
-endif
-endif
-
-ifeq ($(LIBUSBLIB),)
-LIBUSBLIB=$(shell for i in lib/gcc lib .libs; do if [ -f $(LIBUSBPATH)/$$i/libusb.a ]; then echo $(LIBUSBPATH)/$$i; break; fi; done)
-ifneq ($(LIBUSBLIB),)
-ifneq ($(quiet),1)
-$(warning .	found libusb lib     files in '$(LIBUSBLIB)/libusb.a')
-endif
-endif
-endif
-
-endif # libusbpath
-
-ifneq ($(LIBUSBINCL),)
-ifneq ($(shell test -f $(LIBUSBINCL)/usb.h; echo $$?),0)
-$(warning '$(LIBUSBINCL)/usb.h' not found)
-endif
-CFLAGS		+= -I$(LIBUSBINCL)
-endif
-
-ifneq ($(LIBUSBLIB),)
-ifneq ($(shell test -f $(LIBUSBLIB)/libusb.a; echo $$?),0)
-$(warning '$(LIBUSBLIB)/libusb.a' not found)
-endif
-LIBUSB		+= -L$(LIBUSBLIB)
-endif
 
 ######################################
 # more general/default settings
 
 # libusb
-LINKUSB		?= -lusb
+CFLAGS		+= $(shell pkg-config --cflags libusb)
+LDFLAGS		+= $(shell pkg-config --libs libusb)
 
 # local compiler
 
@@ -217,10 +161,10 @@ libf2a.a: $(LIBOBJS)
 	$(AR) $(ARFLAGS) $@ $^
 
 if2a$(EXT): if2a.o libf2a.a
-	$(LINKDEBUG) $(CC) -o $@ $< -L. -lf2a -lm $(LIBUSB) $(LINKUSB) $(LDFLAGS)
+	$(LINKDEBUG) $(CC) -o $@ $< -L. -lf2a -lm $(LDFLAGS)
 
 iefa$(EXT): iefa.o libf2a.a
-	$(LINKDEBUG) $(CC) -o $@ $< -L. -lf2a -lm $(LIBUSB) $(LINKUSB) $(LDFLAGS)
+	$(LINKDEBUG) $(CC) -o $@ $< -L. -lf2a -lm $(LDFLAGS)
 
 release strip: $(TARGETS)
 	$(STRIP) $(TARGETS)

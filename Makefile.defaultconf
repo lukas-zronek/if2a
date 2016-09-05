@@ -31,15 +31,6 @@ EFALINKER	= 1
 # static linking is good for distributed binaries
 STATIC	 	= 1
 
-### libusb search path 
-#win32
-LIBUSBPATH_WIN32	?= ./libusb-win32-bin-0.1.8.0
-#LIBUSBPATH_WIN32	?= ./libusb-win32-bin-0.1.10.1
-# OSX
-LIBUSBPATH_OSX		?= ./libusb-0.1.10a
-# other unices
-LIBUSBPATH_UNIX 	?= ./libusb-0.1.10a
-
 # some flags
 CFLAGS		+= -O0 -g -Wall
 LDFLAGS		+=
