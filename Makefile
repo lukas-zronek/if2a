@@ -21,7 +21,7 @@ endif
 ######################################
 # pkg-config
 
-ifeq ($(shell which pkg-config; echo $$?),0)
+ifeq ($(shell which pkg-config > /dev/null; echo $$?),0)
 HAVE_PKG_CONFIG=1
 else
 ifneq ($(quiet),1)
